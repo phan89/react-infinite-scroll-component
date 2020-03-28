@@ -24,6 +24,8 @@ export interface Props {
   initialScrollY?: number;
   key?: string;
   className?: string;
+  forcedStyle?: CSSProperties;
+  outerStyle?: CSSProperties;
 }
 
 interface State {
@@ -246,9 +248,11 @@ export default class InfiniteScroll extends Component<Props, State> {
     }
 
     requestAnimationFrame(() => {
-      // this._infScroll
       if (this._infScroll) {
-        this._infScroll.style.overflow = 'auto';
+        this._infScroll.style.overflow =
+          this.props.forcedStyle && this.props.forcedStyle.overflow
+            ? this.props.forcedStyle.overflow
+            : 'auto';
         this._infScroll.style.transform = 'none';
         this._infScroll.style.willChange = 'none';
       }
@@ -328,6 +332,8 @@ export default class InfiniteScroll extends Component<Props, State> {
     const outerDivStyle =
       this.props.pullDownToRefresh && this.props.height
         ? { overflow: 'auto' }
+        : this.props.outerStyle
+        ? this.props.outerStyle
         : {};
     return (
       <div
